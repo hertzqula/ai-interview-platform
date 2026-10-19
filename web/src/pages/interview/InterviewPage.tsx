@@ -21,7 +21,7 @@ import { useAudioPlayback } from "@/hooks/useAudioPlayback";
 import { useAudioWebSocket } from "@/hooks/useAudioWebSocket";
 import { sessionsApi } from "@/services/sessions";
 import HardwareCheck from "@/components/HardwareCheck";
-import { CheckCircle, Mic, MicOff, ShieldCheck } from "lucide-react";
+import { CheckCircle, CheckCircle2, Clock, Mic, MicOff } from "lucide-react";
 import type { CandidateInfo, InterviewState, InterviewSpeaker, TranscriptTurn } from "@/types";
 
 export default function InterviewPage() {
@@ -191,62 +191,47 @@ export default function InterviewPage() {
   // ── State A: Pre-start ──────────────────────────────────────────────────
   if (interviewState === "idle") {
     return (
-      <div className="max-w-xl mx-auto px-4 py-8 space-y-6">
-        <div className="text-center space-y-1">
-          <h1 className="text-xl font-semibold">{candidateInfo?.role_title ?? "AI Interview"}</h1>
+      <div className="max-w-2xl mx-auto px-4 py-8 space-y-6">
+        <div className="text-center space-y-1.5 pt-2">
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">
+            {candidateInfo?.role_title ?? "AI Interview"}
+          </h1>
           {candidateInfo && (
-            <p className="text-sm text-muted-foreground">
-              {candidateInfo.time_limit_min} minutes
-            </p>
+            <div className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+              <Clock className="h-3.5 w-3.5" />
+              <span>{candidateInfo.time_limit_min} minutes session</span>
+            </div>
           )}
-        </div>
-
-        {/* Informed Consent - UU PDP No. 27/2022 */}
-        <div className="rounded-lg border bg-card p-4 space-y-3">
-          <div className="flex items-start gap-3">
-            <div className="p-2 rounded-full bg-primary/10 text-primary shrink-0 mt-0.5">
-              <ShieldCheck className="h-5 w-5" />
-            </div>
-            <div className="space-y-1">
-              <h3 className="font-semibold text-sm">
-                Voice Biometrics & Privacy Consent (UU PDP No. 27/2022)
-              </h3>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                In compliance with the Indonesian Personal Data Protection Law (UU PDP No. 27/2022), your voice audio is classified as specific biometric personal data. By continuing, you acknowledge and agree that:
-              </p>
-              <ul className="text-xs text-muted-foreground list-disc list-inside space-y-1 pt-1">
-                <li>Your voice will be recorded and transmitted securely during this interview.</li>
-                <li>Your responses will be transcribed and evaluated by an AI model (Google Gemini) for job competency matching.</li>
-                <li>Evaluation records are strictly confidential and only accessible by the recruiting team for this position.</li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="pt-2 border-t">
-            <label className="flex items-start gap-2.5 cursor-pointer select-none">
-              <input
-                type="checkbox"
-                id="pdp-consent-checkbox"
-                checked={consentGiven}
-                onChange={(e) => setConsentGiven(e.target.checked)}
-                className="mt-0.5 h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary accent-primary"
-              />
-              <span className="text-xs font-medium leading-normal">
-                I have read, understood, and give explicit consent to the recording of my voice and the AI-driven processing of my biometric data in accordance with UU PDP No. 27/2022.
-              </span>
-            </label>
-          </div>
         </div>
 
         {!hardwareCheckDone ? (
           <div className="space-y-4">
-            <div className="bg-muted/50 rounded-lg p-4 text-sm space-y-1.5 text-muted-foreground">
-              <p>• This is a voice interview. Make sure you're in a quiet place.</p>
-              <p>• The AI will ask follow-up questions — there are no scripts.</p>
-              <p>• The session will last up to {candidateInfo?.time_limit_min ?? "—"} minutes.</p>
-              <p>• Your mic will be active throughout. You can end anytime.</p>
+            <div className="border-l-2 border-primary/60 bg-muted/20 p-4 space-y-2">
+              <span className="text-xs font-bold uppercase tracking-wider text-foreground block">
+                Interview Guidelines
+              </span>
+              <ul className="space-y-1.5 text-xs text-muted-foreground">
+                <li className="flex items-center gap-2">
+                  <span className="h-1.5 w-1.5 bg-primary/80 shrink-0" />
+                  <span>This is a voice interview. Make sure you're in a quiet place.</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="h-1.5 w-1.5 bg-primary/80 shrink-0" />
+                  <span>The AI will ask follow-up questions — there are no scripts.</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="h-1.5 w-1.5 bg-primary/80 shrink-0" />
+                  <span>The session will last up to {candidateInfo?.time_limit_min ?? "—"} minutes.</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="h-1.5 w-1.5 bg-primary/80 shrink-0" />
+                  <span>Your mic will be active throughout. You can end anytime.</span>
+                </li>
+              </ul>
             </div>
             <HardwareCheck
+              consentGiven={consentGiven}
+              onConsentChange={setConsentGiven}
               canStart={consentGiven}
               onStart={() => {
                 if (!consentGiven) return;
@@ -257,8 +242,8 @@ export default function InterviewPage() {
           </div>
         ) : (
           <div className="space-y-4">
-            <div className="flex items-center gap-2 text-sm text-green-700 bg-green-50 border border-green-200 rounded-lg px-4 py-2.5">
-              <CheckCircle className="h-4 w-4 shrink-0" />
+            <div className="flex items-center gap-2 text-sm text-emerald-800 bg-emerald-50 border border-emerald-200 px-4 py-2.5">
+              <CheckCircle className="h-4 w-4 shrink-0 text-emerald-600" />
               <span>Hardware checks passed. You're ready to start.</span>
             </div>
             {!consentGiven && (
@@ -284,9 +269,13 @@ export default function InterviewPage() {
   // ── State F: Complete ───────────────────────────────────────────────────
   if (interviewState === "complete") {
     return (
-      <div className="max-w-xl mx-auto px-4 py-16 text-center space-y-4">
-        <div className="text-4xl">✅</div>
-        <h2 className="text-xl font-semibold">Interview Complete</h2>
+      <div className="max-w-2xl mx-auto px-4 py-16 text-center space-y-4">
+        <div className="flex justify-center">
+          <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-600">
+            <CheckCircle2 className="h-8 w-8" />
+          </div>
+        </div>
+        <h2 className="text-xl font-bold text-foreground">Interview Complete</h2>
         <p className="text-sm text-muted-foreground">
           Thank you. The interview has been recorded.
           <br />
@@ -301,10 +290,10 @@ export default function InterviewPage() {
   const candidateSpeaking = speaker === "candidate";
 
   return (
-    <div className="max-w-xl mx-auto px-4 flex flex-col h-full">
+    <div className="max-w-2xl mx-auto px-4 flex flex-col h-full">
       {/* Top bar */}
       <div className="flex items-center justify-between py-3 border-b sticky top-12 bg-white z-10">
-        <span className="text-sm font-medium">AI Interview</span>
+        <span className="text-sm font-semibold text-foreground">AI Interview</span>
         {candidateInfo && (
           <InterviewTimer
             totalSeconds={candidateInfo.time_limit_min * 60}
@@ -317,12 +306,12 @@ export default function InterviewPage() {
       {/* Reconnecting banner */}
       {interviewState === "reconnecting" && (
         connectionLostLong ? (
-          <div className="flex items-center gap-2 text-sm bg-red-50 border border-red-200 text-red-800 rounded-lg px-4 py-2.5 mt-2">
+          <div className="flex items-center gap-2 text-sm bg-red-50 border border-red-200 text-red-800 px-4 py-2.5 mt-2">
             <span className="animate-pulse">●</span>
             <span>Connection is taking too long to restore. Please wait, and contact the interviewer if this persists.</span>
           </div>
         ) : (
-          <div className="flex items-center gap-2 text-sm bg-yellow-50 border border-yellow-200 text-yellow-800 rounded-lg px-4 py-2.5 mt-2">
+          <div className="flex items-center gap-2 text-sm bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-2.5 mt-2">
             <span className="animate-pulse">●</span>
             <span>Briefly reconnecting — please wait a moment.</span>
           </div>
@@ -331,7 +320,7 @@ export default function InterviewPage() {
 
       {/* Reconnected prompt */}
       {reconnectedPrompt && (
-        <div className="flex items-center justify-between text-sm bg-blue-50 border border-blue-200 text-blue-800 rounded-lg px-4 py-2.5 mt-2">
+        <div className="flex items-center justify-between text-sm bg-blue-50 border border-blue-200 text-blue-800 px-4 py-2.5 mt-2">
           <span>Reconnected — please say <strong>"check"</strong> or continue your answer to resume.</span>
           <button className="ml-3 text-blue-500 hover:text-blue-700 shrink-0" onClick={() => setReconnectedPrompt(false)}>✕</button>
         </div>
