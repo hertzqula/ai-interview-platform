@@ -13,6 +13,7 @@ import { RefreshCw, CheckCircle, XCircle, Loader2, Circle } from "lucide-react";
 
 interface HardwareCheckProps {
     onStart?: () => void;
+    canStart?: boolean;
 }
 
 function StateIcon({ state }: { state: ProctoringState }) {
@@ -34,7 +35,7 @@ function stateLabel(state: ProctoringState) {
 
 const REQUIRE_CAMERA = import.meta.env.VITE_REQUIRE_CAMERA === "true";
 
-const HardwareCheck: React.FC<HardwareCheckProps> = ({ onStart }) => {
+const HardwareCheck: React.FC<HardwareCheckProps> = ({ onStart, canStart = true }) => {
     const [progress, setProgress] = useState<HardwareCheckingProgress>({
         osAndBrowser: ProctoringState.WAITING,
         internet: ProctoringState.WAITING,
@@ -278,10 +279,15 @@ const HardwareCheck: React.FC<HardwareCheckProps> = ({ onStart }) => {
                         Retry
                     </Button>
                 )}
+                {!canStart && allPassed && (
+                    <span className="text-xs text-amber-600 font-medium ml-auto">
+                        Please agree to the privacy consent above to continue
+                    </span>
+                )}
                 <Button
                     size="sm"
-                    className="ml-auto"
-                    disabled={!allPassed}
+                    className={canStart ? "ml-auto" : "ml-2"}
+                    disabled={!allPassed || !canStart}
                     onClick={onStart}
                 >
                     Start Interview

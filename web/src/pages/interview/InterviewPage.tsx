@@ -21,7 +21,7 @@ import { useAudioPlayback } from "@/hooks/useAudioPlayback";
 import { useAudioWebSocket } from "@/hooks/useAudioWebSocket";
 import { sessionsApi } from "@/services/sessions";
 import HardwareCheck from "@/components/HardwareCheck";
-import { CheckCircle, Mic, MicOff } from "lucide-react";
+import { CheckCircle, Mic, MicOff, ShieldCheck } from "lucide-react";
 import type { CandidateInfo, InterviewState, InterviewSpeaker, TranscriptTurn } from "@/types";
 
 export default function InterviewPage() {
@@ -32,6 +32,7 @@ export default function InterviewPage() {
   const [speaker, setSpeaker] = useState<InterviewSpeaker>(null);
   const [transcript, setTranscript] = useState<Pick<TranscriptTurn, "speaker" | "text">[]>([]);
   const [hardwareCheckDone, setHardwareCheckDone] = useState(false); // kept for green banner
+  const [consentGiven, setConsentGiven] = useState(false);
   const [connectionLostLong, setConnectionLostLong] = useState(false);
   const [reconnectedPrompt, setReconnectedPrompt] = useState(false);
   const reconnectedPromptTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -160,7 +161,7 @@ export default function InterviewPage() {
   }, [mute, unmute]);
 
   const startInterview = useCallback(async () => {
-    if (!sessionId) return;
+    if (!sessionId || !consentGiven) return;
     setInterviewState("connecting");
     connect();
     await startCapture();
@@ -168,7 +169,7 @@ export default function InterviewPage() {
     // This prevents mic audio from being sent during AI speech, since separate
     // AudioContexts for capture/playback break the browser's echo cancellation.
     muteRef.current?.();
-  }, [sessionId, connect, startCapture]);
+  }, [sessionId, consentGiven, connect, startCapture]);
 
   const endInterview = useCallback(async () => {
     setInterviewState("ending");
@@ -200,6 +201,43 @@ export default function InterviewPage() {
           )}
         </div>
 
+        {/* Informed Consent - UU PDP No. 27/2022 */}
+        <div className="rounded-lg border bg-card p-4 space-y-3">
+          <div className="flex items-start gap-3">
+            <div className="p-2 rounded-full bg-primary/10 text-primary shrink-0 mt-0.5">
+              <ShieldCheck className="h-5 w-5" />
+            </div>
+            <div className="space-y-1">
+              <h3 className="font-semibold text-sm">
+                Voice Biometrics & Privacy Consent (UU PDP No. 27/2022)
+              </h3>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                In compliance with the Indonesian Personal Data Protection Law (UU PDP No. 27/2022), your voice audio is classified as specific biometric personal data. By continuing, you acknowledge and agree that:
+              </p>
+              <ul className="text-xs text-muted-foreground list-disc list-inside space-y-1 pt-1">
+                <li>Your voice will be recorded and transmitted securely during this interview.</li>
+                <li>Your responses will be transcribed and evaluated by an AI model (Google Gemini) for job competency matching.</li>
+                <li>Evaluation records are strictly confidential and only accessible by the recruiting team for this position.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="pt-2 border-t">
+            <label className="flex items-start gap-2.5 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                id="pdp-consent-checkbox"
+                checked={consentGiven}
+                onChange={(e) => setConsentGiven(e.target.checked)}
+                className="mt-0.5 h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary accent-primary"
+              />
+              <span className="text-xs font-medium leading-normal">
+                I have read, understood, and give explicit consent to the recording of my voice and the AI-driven processing of my biometric data in accordance with UU PDP No. 27/2022.
+              </span>
+            </label>
+          </div>
+        </div>
+
         {!hardwareCheckDone ? (
           <div className="space-y-4">
             <div className="bg-muted/50 rounded-lg p-4 text-sm space-y-1.5 text-muted-foreground">
@@ -208,7 +246,14 @@ export default function InterviewPage() {
               <p>• The session will last up to {candidateInfo?.time_limit_min ?? "—"} minutes.</p>
               <p>• Your mic will be active throughout. You can end anytime.</p>
             </div>
-            <HardwareCheck onStart={() => { setHardwareCheckDone(true); startInterview(); }} />
+            <HardwareCheck
+              canStart={consentGiven}
+              onStart={() => {
+                if (!consentGiven) return;
+                setHardwareCheckDone(true);
+                startInterview();
+              }}
+            />
           </div>
         ) : (
           <div className="space-y-4">
@@ -216,7 +261,17 @@ export default function InterviewPage() {
               <CheckCircle className="h-4 w-4 shrink-0" />
               <span>Hardware checks passed. You're ready to start.</span>
             </div>
-            <Button className="w-full" size="lg" onClick={startInterview}>
+            {!consentGiven && (
+              <p className="text-xs text-amber-600 font-medium">
+                Please check the privacy consent above to start the interview.
+              </p>
+            )}
+            <Button
+              className="w-full"
+              size="lg"
+              disabled={!consentGiven}
+              onClick={startInterview}
+            >
               <Mic className="h-4 w-4 mr-2" />
               Start Interview
             </Button>
