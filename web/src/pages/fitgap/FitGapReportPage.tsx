@@ -8,7 +8,7 @@ import ComparisonTable from "@/components/fitgap/ComparisonTable";
 import { portfoliosApi } from "@/services/portfolios";
 import { sessionsApi } from "@/services/sessions";
 import { usePolling } from "@/hooks/usePolling";
-import { ArrowLeft, Download, Loader2, RefreshCw, Zap } from "lucide-react";
+import { ArrowLeft, Download, Loader2, RefreshCw, Zap, AlertCircle } from "lucide-react";
 import type { FitGapReport, Portfolio } from "@/types";
 
 export default function FitGapReportPage() {
@@ -166,12 +166,38 @@ export default function FitGapReportPage() {
           {/* Culture & competency */}
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm">Culture &amp; Competency Fit</CardTitle>
+              <CardTitle className="text-sm">
+                {report.culture_narrative ? "Culture & Competency Fit" : "Skill Fit Summary"}
+              </CardTitle>
             </CardHeader>
-            <CardContent className="px-4 pb-4">
-              <p className="text-sm leading-relaxed text-foreground whitespace-pre-wrap">
-                {report.culture_narrative || report.overall_narrative}
-              </p>
+            <CardContent className="px-4 pb-4 space-y-4">
+              {!report.culture_narrative && (
+                <div className="flex items-start gap-2 p-3 text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-md">
+                  <AlertCircle className="h-4 w-4 text-amber-600 mt-0.5 shrink-0" />
+                  <div>
+                    <span className="font-semibold">AI narrative generation was temporarily unavailable.</span> Showing rule-based skill summary below. You can click <strong>Regenerate</strong> above to generate the full narrative once AI is ready.
+                  </div>
+                </div>
+              )}
+
+              {report.culture_narrative && (
+                <p className="text-sm leading-relaxed text-foreground whitespace-pre-wrap">
+                  {report.culture_narrative}
+                </p>
+              )}
+
+              {report.overall_narrative && (
+                <div className={report.culture_narrative ? "pt-2 border-t" : ""}>
+                  {report.culture_narrative && (
+                    <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">
+                      Overall Recommendation
+                    </h4>
+                  )}
+                  <p className="text-sm leading-relaxed text-foreground whitespace-pre-wrap">
+                    {report.overall_narrative}
+                  </p>
+                </div>
+              )}
             </CardContent>
           </Card>
 

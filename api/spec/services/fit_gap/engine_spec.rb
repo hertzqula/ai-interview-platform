@@ -106,4 +106,36 @@ RSpec.describe FitGap::Engine, type: :service do
       expect(node_comp[:candidate_level]).to eq(3) # AI level
     end
   end
+
+  describe '#generate_narratives (TAMPILAN-02)' do
+    let(:mock_gemini) { instance_double(Gemini::HttpClient) }
+    let(:engine_with_mock) { described_class.new(portfolio: portfolio, vacancy: vacancy, gemini_client: mock_gemini) }
+    let(:sample_comparisons) { engine_with_mock.send(:build_skill_comparisons) }
+
+    before do
+      # Avoid sleeping during tests
+      allow(engine_with_mock).to receive(:sleep)
+    end
+
+    it 'returns culture and overall narratives when AI succeeds' do
+      expect(mock_gemini).to receive(:generate_content).and_return({
+        'culture_narrative' => 'Strong team culture alignment.',
+        'overall_narrative' => 'Recommended for the role.'
+      })
+
+      narratives = engine_with_mock.send(:generate_narratives, sample_comparisons)
+      expect(narratives[:culture]).to eq('Strong team culture alignment.')
+      expect(narratives[:overall]).to eq('Recommended for the role.')
+    end
+
+    it 'retries up to 2 times on rate limit before falling back to rule-based summary' do
+      expect(mock_gemini).to receive(:generate_content).exactly(3).times.and_raise(
+        Gemini::HttpClient::RateLimitError.new('Rate limited', status: 429)
+      )
+
+      narratives = engine_with_mock.send(:generate_narratives, sample_comparisons)
+      expect(narratives[:culture]).to be_nil
+      expect(narratives[:overall]).to include('skill match')
+    end
+  end
 end
