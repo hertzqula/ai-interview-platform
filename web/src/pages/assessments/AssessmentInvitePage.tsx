@@ -405,7 +405,7 @@ export default function AssessmentInvitePage() {
             </Card>
 
             {/* Desktop table view */}
-            <div className="hidden md:block border bg-card overflow-hidden">
+            <div className="hidden md:block bg-card overflow-hidden">
               <Table className="table-fixed">
                 <TableHeader>
                   <TableRow>
