@@ -74,6 +74,9 @@ export default function LoginPage() {
           </Button>
         </form>
 
+        <p className="text-center text-xs text-muted-foreground">
+          Need an assessor account? Please contact your organization administrator.
+        </p>
       </div>
     </div>
   );
