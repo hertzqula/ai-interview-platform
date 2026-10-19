@@ -135,8 +135,8 @@ export default function AssessmentListPage() {
         </div>
       ) : (
         <>
-          {/* Mobile card view */}
-          <Card className="md:hidden rounded-none">
+          {/* Mobile & Tablet card view */}
+          <Card className="lg:hidden rounded-none">
             <CardContent className="p-0 divide-y">
               {assessments.map((a, i) => (
                 <AssessmentCardItem
@@ -150,7 +150,7 @@ export default function AssessmentListPage() {
           </Card>
 
           {/* Desktop table view */}
-          <div className="hidden md:block bg-card overflow-hidden">
+          <div className="hidden lg:block bg-card overflow-hidden">
             <Table className="table-fixed">
               <TableHeader>
                 <TableRow>

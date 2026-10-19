@@ -114,8 +114,8 @@ export function AppBreadcrumbs() {
         </BreadcrumbItem>
         <BreadcrumbSeparator />
 
-        {/* Mobile: Ellipsis dengan DropdownMenu untuk item tengah */}
-        <BreadcrumbItem className="md:hidden">
+        {/* Mobile & Tablet: Ellipsis dengan DropdownMenu untuk item tengah */}
+        <BreadcrumbItem className="lg:hidden">
           <DropdownMenu>
             <DropdownMenuTrigger className="flex items-center gap-1 focus:outline-none" aria-label="Toggle intermediate breadcrumbs">
               <BreadcrumbEllipsis />
@@ -133,12 +133,12 @@ export function AppBreadcrumbs() {
             </DropdownMenuContent>
           </DropdownMenu>
         </BreadcrumbItem>
-        <BreadcrumbSeparator className="md:hidden" />
+        <BreadcrumbSeparator className="lg:hidden" />
 
         {/* Desktop: Render item tengah secara utuh */}
         {intermediateItems.map((item, idx) => (
           <Fragment key={idx}>
-            <BreadcrumbItem className="hidden md:inline-flex">
+            <BreadcrumbItem className="hidden lg:inline-flex">
               {item.href ? (
                 <BreadcrumbLink asChild>
                   <Link to={item.href}>{item.label}</Link>
@@ -147,7 +147,7 @@ export function AppBreadcrumbs() {
                 <BreadcrumbPage>{item.label}</BreadcrumbPage>
               )}
             </BreadcrumbItem>
-            <BreadcrumbSeparator className="hidden md:inline-flex" />
+            <BreadcrumbSeparator className="hidden lg:inline-flex" />
           </Fragment>
         ))}
 

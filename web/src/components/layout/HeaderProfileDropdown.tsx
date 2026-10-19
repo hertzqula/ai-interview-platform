@@ -41,8 +41,8 @@ export function HeaderProfileDropdown({
           aria-label="User account menu"
           className="flex items-center gap-2.5 focus:outline-none rounded-sm p-0.5 hover:bg-muted/50 transition-colors"
         >
-          {/* On desktop: show name & email; on mobile: hidden so only the avatar is visible */}
-          <div className="hidden md:flex flex-col text-right">
+          {/* On desktop: show name & email; on mobile/tablet: hidden so only the avatar is visible */}
+          <div className="hidden lg:flex flex-col text-right">
             <span className="text-xs font-semibold leading-tight text-foreground">{userName}</span>
             <span className="text-[11px] text-muted-foreground leading-tight">{userEmail}</span>
           </div>

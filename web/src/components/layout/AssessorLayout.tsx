@@ -106,13 +106,13 @@ export default function AssessorLayout() {
           {/* Account Information Header in English */}
           <div className="flex items-center gap-2 md:gap-3 shrink-0 ml-2 md:ml-4">
             {/* Company Badge */}
-            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 bg-muted/60 border border-border text-xs font-medium text-foreground">
+            <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 bg-muted/60 border border-border text-xs font-medium text-foreground">
               <Building2 className="h-3.5 w-3.5 text-primary shrink-0" />
               <span>{companyName}</span>
             </div>
 
             {/* User Profile Dropdown */}
-            <div className="flex items-center sm:pl-3 sm:border-l sm:border-border">
+            <div className="flex items-center lg:pl-3 lg:border-l lg:border-border">
               <HeaderProfileDropdown
                 userName={userName}
                 userEmail={userEmail}

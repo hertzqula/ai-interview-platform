@@ -57,8 +57,8 @@ export default function ComparisonTable({ comparisons }: ComparisonTableProps) {
 
   return (
     <div className="space-y-3">
-      {/* Mobile card view */}
-      <Card className="md:hidden rounded-none">
+      {/* Mobile & Tablet card view */}
+      <Card className="lg:hidden rounded-none">
         <CardContent className="p-0 divide-y">
           {comparisons.map((c, i) => (
             <div key={i} className="p-4 space-y-2.5">
@@ -99,7 +99,7 @@ export default function ComparisonTable({ comparisons }: ComparisonTableProps) {
       </Card>
 
       {/* Desktop table view */}
-      <div className="hidden md:block bg-card overflow-hidden">
+      <div className="hidden lg:block bg-card overflow-hidden">
         <Table className="table-fixed">
           <TableHeader>
             <TableRow>
