@@ -163,11 +163,7 @@ export default function AssessmentListPage() {
               </TableHeader>
               <TableBody>
                 {assessments.map((a, i) => (
-                  <TableRow
-                    key={a.id}
-                    className="cursor-pointer hover:bg-muted/40 transition-colors"
-                    onClick={() => navigate(`/assessments/${a.id}/invite`)}
-                  >
+                  <TableRow key={a.id}>
                     <TableCell className="text-center font-medium text-muted-foreground">
                       {i + 1}
                     </TableCell>
@@ -187,10 +183,7 @@ export default function AssessmentListPage() {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigate(`/assessments/${a.id}/invite`);
-                        }}
+                        onClick={() => navigate(`/assessments/${a.id}/invite`)}
                       >
                         Open →
                       </Button>
