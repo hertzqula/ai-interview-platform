@@ -139,7 +139,7 @@ export default function FitGapReportPage() {
 
       {/* Generating */}
       {generating && (
-        <div className="border rounded-lg p-12 text-center space-y-3">
+        <div className="border p-12 text-center space-y-3">
           <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto" />
           <p className="text-sm text-muted-foreground">Generating fit/gap report...</p>
         </div>
@@ -149,54 +149,46 @@ export default function FitGapReportPage() {
       {report && (
         <>
           {/* Skill comparison */}
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm">Skill Comparison</CardTitle>
-            </CardHeader>
-            <CardContent className="px-4 pb-4">
-              <ComparisonTable comparisons={report.skill_comparisons} />
-            </CardContent>
-          </Card>
+          <div className="space-y-3">
+            <h2 className="text-base font-bold text-foreground">Skill Comparison</h2>
+            <ComparisonTable comparisons={report.skill_comparisons} />
+          </div>
 
           <Separator />
 
           {/* Culture & competency */}
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm">
-                {report.culture_narrative ? "Culture & Competency Fit" : "Skill Fit Summary"}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="px-4 pb-4 space-y-4">
-              {!report.culture_narrative && (
-                <div className="flex items-start gap-2 p-3 text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-md">
-                  <AlertCircle className="h-4 w-4 text-amber-600 mt-0.5 shrink-0" />
-                  <div>
-                    <span className="font-semibold">AI narrative generation was temporarily unavailable.</span> Showing rule-based skill summary below. You can click <strong>Regenerate</strong> above to generate the full narrative once AI is ready.
-                  </div>
+          <div className="space-y-6">
+            {!report.culture_narrative && (
+              <div className="flex items-start gap-2.5 p-3.5 text-xs text-amber-900 bg-amber-50/70 border border-amber-200/80">
+                <AlertCircle className="h-4 w-4 text-amber-600 mt-0.5 shrink-0" />
+                <div>
+                  <span className="font-semibold">AI narrative generation was temporarily unavailable.</span> Showing rule-based skill summary below. You can click <strong>Regenerate</strong> above to generate the full narrative once AI is ready.
                 </div>
-              )}
+              </div>
+            )}
 
-              {report.culture_narrative && (
-                <p className="text-sm leading-relaxed text-foreground whitespace-pre-wrap">
+            {report.culture_narrative && (
+              <div className="space-y-2">
+                <span className="text-xs font-bold uppercase tracking-wider text-foreground block">
+                  Culture & Competency Fit
+                </span>
+                <div className="p-4 bg-muted/30 border text-sm text-foreground leading-relaxed whitespace-pre-wrap">
                   {report.culture_narrative}
-                </p>
-              )}
-
-              {report.overall_narrative && (
-                <div className={report.culture_narrative ? "pt-2 border-t" : ""}>
-                  {report.culture_narrative && (
-                    <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">
-                      Overall Recommendation
-                    </h4>
-                  )}
-                  <p className="text-sm leading-relaxed text-foreground whitespace-pre-wrap">
-                    {report.overall_narrative}
-                  </p>
                 </div>
-              )}
-            </CardContent>
-          </Card>
+              </div>
+            )}
+
+            {report.overall_narrative && (
+              <div className="space-y-2">
+                <span className="text-xs font-bold uppercase tracking-wider text-foreground block">
+                  Overall Recommendation
+                </span>
+                <div className="border-l-2 border-primary/60 bg-muted/20 pl-4 pr-4 py-3 text-sm text-foreground leading-relaxed whitespace-pre-wrap">
+                  {report.overall_narrative}
+                </div>
+              </div>
+            )}
+          </div>
 
           {/* Discovered skills */}
           {portfolio && portfolio.skills.some((s) => s.is_discovered) && (
