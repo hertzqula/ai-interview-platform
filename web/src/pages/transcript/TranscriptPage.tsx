@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Separator } from "@/components/ui/separator";
 import { sessionsApi } from "@/services/sessions";
-import { ArrowLeft, Download } from "lucide-react";
+import { Download } from "lucide-react";
 import type { TranscriptTurn } from "@/types";
 
 export default function TranscriptPage() {
@@ -41,21 +42,14 @@ export default function TranscriptPage() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Link
-            to={`/assessments/${id}/sessions/${sessionId}/portfolio`}
-            className="text-muted-foreground hover:text-foreground"
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </Link>
-          <div>
-            <h1 className="text-lg font-semibold">Interview Transcript</h1>
-            {candidateName && (
-              <p className="text-sm text-muted-foreground">{candidateName}</p>
-            )}
-          </div>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="space-y-1">
+          <h1 className="text-xl md:text-2xl font-bold tracking-tight">Interview Transcript</h1>
+          <p className="text-sm text-muted-foreground">
+            {candidateName ? `Candidate: ${candidateName} · ` : ""}Full dialogue history between the candidate and AI interviewer.
+          </p>
         </div>
         {!loading && !error && turns.length > 0 && (
           <Button variant="outline" size="sm" onClick={handleDownload}>
@@ -64,6 +58,8 @@ export default function TranscriptPage() {
           </Button>
         )}
       </div>
+
+      <Separator />
 
       {loading && (
         <div className="space-y-3">
