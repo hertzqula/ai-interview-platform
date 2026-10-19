@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Separator } from "@/components/ui/separator";
 import { assessmentsApi } from "@/services/assessments";
 import { Plus, Clock, ChevronRight } from "lucide-react";
 import type { Assessment } from "@/types";
@@ -42,13 +43,20 @@ export default function AssessmentListPage() {
   }, []);
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold">Assessments</h1>
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="space-y-1">
+          <h1 className="text-xl md:text-2xl font-bold tracking-tight">Assessments</h1>
+          <p className="text-sm text-muted-foreground">
+            Manage and track candidate interview assessments.
+          </p>
+        </div>
         <Button onClick={() => navigate("/assessments/new")}>
           <Plus className="h-4 w-4 mr-1.5" /> New Assessment
         </Button>
       </div>
+
+      <Separator />
 
       {error && (
         <div className="border border-destructive/40 rounded-lg p-4 text-sm text-destructive">
