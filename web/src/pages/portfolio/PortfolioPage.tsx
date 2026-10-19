@@ -184,44 +184,48 @@ export default function PortfolioPage() {
       {!generating && portfolio?.generation_status === "complete" && (
         <>
           {/* Configured skills */}
-          <div className="space-y-3">
-            <h2 className="text-sm font-semibold">Configured Skills</h2>
-            {portfolio.skills
-              .filter((s) => !s.is_discovered)
-              .map((skill) => (
-                <SkillPortfolioCard
-                  key={skill.id}
-                  skill={skill}
-                  override={overrides[skill.id]}
-                  onOverrideSaved={(o) => handleOverrideSaved(skill.id, o)}
-                />
-              ))}
+          <div className="space-y-4">
+            <h2 className="text-base font-bold text-foreground">Configured Skills</h2>
+            <div className="space-y-4">
+              {portfolio.skills
+                .filter((s) => !s.is_discovered)
+                .map((skill) => (
+                  <SkillPortfolioCard
+                    key={skill.id}
+                    skill={skill}
+                    override={overrides[skill.id]}
+                    onOverrideSaved={(o) => handleOverrideSaved(skill.id, o)}
+                  />
+                ))}
+            </div>
           </div>
 
           {/* Discovered skills */}
           {portfolio.skills.some((s) => s.is_discovered) && (
             <>
               <Separator />
-              <div className="space-y-3">
+              <div className="space-y-4">
                 <div>
-                  <h2 className="text-sm font-semibold flex items-center gap-1.5">
+                  <h2 className="text-base font-bold flex items-center gap-2 text-foreground">
                     <Zap className="h-4 w-4 text-amber-500" />
                     Discovered Skills
                   </h2>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-sm text-muted-foreground">
                     Skills the AI probed that were not in the original assessment
                   </p>
                 </div>
-                {portfolio.skills
-                  .filter((s) => s.is_discovered)
-                  .map((skill) => (
-                    <SkillPortfolioCard
-                      key={skill.id}
-                      skill={skill}
-                      override={overrides[skill.id]}
-                      onOverrideSaved={(o) => handleOverrideSaved(skill.id, o)}
-                    />
-                  ))}
+                <div className="space-y-4">
+                  {portfolio.skills
+                    .filter((s) => s.is_discovered)
+                    .map((skill) => (
+                      <SkillPortfolioCard
+                        key={skill.id}
+                        skill={skill}
+                        override={overrides[skill.id]}
+                        onOverrideSaved={(o) => handleOverrideSaved(skill.id, o)}
+                      />
+                    ))}
+                </div>
               </div>
             </>
           )}
