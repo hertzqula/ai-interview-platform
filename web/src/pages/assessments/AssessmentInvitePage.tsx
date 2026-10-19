@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -222,6 +222,10 @@ export default function AssessmentInvitePage() {
   const [showInviteDialog, setShowInviteDialog] = useState(false);
   const [candidateNameInput, setCandidateNameInput] = useState("");
 
+  const sortedSessions = useMemo(() => {
+    return [...sessions].sort((a, b) => a.id - b.id);
+  }, [sessions]);
+
   const loadSessions = useCallback(async () => {
     const res = await assessmentsApi.getSessions(Number(id));
     setSessions(res.data.sessions);
@@ -388,14 +392,14 @@ export default function AssessmentInvitePage() {
             {/* Mobile card view */}
             <Card className="md:hidden rounded-none">
               <CardContent className="p-0 divide-y">
-                {sessions.map((session, i) => (
+                {sortedSessions.map((session, i) => (
                   <SessionCardItem
                     key={session.id}
                     session={session}
-                    index={sessions.length - i}
+                    index={i + 1}
                     assessmentId={id!}
                     onCopy={(sid) => {
-                      const s = sessions.find((x) => x.id === sid);
+                      const s = sortedSessions.find((x) => x.id === sid);
                       if (s) copyLink(s, sid);
                     }}
                     copiedId={copiedId}
@@ -417,14 +421,14 @@ export default function AssessmentInvitePage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {sessions.map((session, i) => (
+                  {sortedSessions.map((session, i) => (
                     <SessionTableRow
                       key={session.id}
                       session={session}
-                      index={sessions.length - i}
+                      index={i + 1}
                       assessmentId={id!}
                       onCopy={(sid) => {
-                        const s = sessions.find((x) => x.id === sid);
+                        const s = sortedSessions.find((x) => x.id === sid);
                         if (s) copyLink(s, sid);
                       }}
                       copiedId={copiedId}
