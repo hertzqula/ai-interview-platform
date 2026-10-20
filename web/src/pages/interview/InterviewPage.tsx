@@ -191,7 +191,7 @@ export default function InterviewPage() {
   // ── State A: Pre-start ──────────────────────────────────────────────────
   if (interviewState === "idle") {
     return (
-      <div className="max-w-2xl mx-auto px-4 py-8 space-y-6">
+      <div className="w-full max-w-2xl mx-auto px-4 py-8 space-y-6">
         <div className="text-center space-y-1.5 pt-2">
           <h1 className="text-2xl font-bold tracking-tight text-foreground">
             {candidateInfo?.role_title ?? "AI Interview"}
@@ -269,7 +269,7 @@ export default function InterviewPage() {
   // ── State F: Complete ───────────────────────────────────────────────────
   if (interviewState === "complete") {
     return (
-      <div className="max-w-2xl mx-auto px-4 py-16 text-center space-y-4">
+      <div className="w-full max-w-2xl mx-auto px-4 py-16 text-center space-y-4">
         <div className="flex justify-center">
           <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-600">
             <CheckCircle2 className="h-8 w-8" />
@@ -290,7 +290,7 @@ export default function InterviewPage() {
   const candidateSpeaking = speaker === "candidate";
 
   return (
-    <div className="max-w-2xl mx-auto px-4 flex flex-col h-full">
+    <div className="w-full max-w-2xl mx-auto px-4 flex flex-col h-full">
       {/* Top bar */}
       <div className="flex items-center justify-between py-3 border-b sticky top-12 bg-white z-10">
         <span className="text-sm font-semibold text-foreground">AI Interview</span>
